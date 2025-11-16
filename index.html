@@ -5,28 +5,271 @@
 <title>GhostRadar: mmWave Radar Spoofing Demo</title>
 <link rel="icon" href="favicon.ico">
 <style>
-  body {font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif; max-width: 900px; margin: 40px auto; padding: 0 16px;}
-  h1,h2{margin: .6em 0 .2em} .hero{border:1px solid #e5e7eb;border-radius:16px;padding:18px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px} .badge{background:#eef2ff;border-radius:8px;padding:2px 8px;display:inline-block;margin-right:6px}
-  code{background:#f6f8fa;padding:2px 6px;border-radius:6px}
-  .footer{color:#6b7280;margin-top:40px}
+  body {
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 16px;
+  }
+  h1, h2 { margin: .6em 0 .2em; }
+  .hero {
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .badge {
+    background: #eef2ff;
+    border-radius: 8px;
+    padding: 2px 8px;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  code {
+    background: #f6f8fa;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
+  .footer {
+    color: #6b7280;
+    margin-top: 40px;
+  }
+
+  /* Introduction: left image, right text in one row */
+  .intro-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 16px;
+  }
+  .intro-left {
+    flex: 0 0 42%;
+    max-width: 42%;
+    display: flex;              /* 新增 */
+    flex-direction: column;     /* 新增：图片+caption 竖着排 */
+    align-items: center;        /* 新增：水平居中 */
+  }
+  .intro-right {
+    flex: 1;
+  }
+  .intro-img {
+    width: 100%;                /* 或根据需要改成 80% 等 */
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: block;             /* 可选，加上更稳妥 */
+  }
+  .fig-caption {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 6px;
+  }
+  .intro-right p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+  }
+  .threat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+  margin-bottom: 12px;
+}
+
+/* 每个格子是一个固定高度的盒子，用 flex 居中内容 */
+.threat-item {
+  height: 230px;              /* 根据实际效果调，比如 200 / 240 */
+  display: flex;
+  align-items: center;        /* 垂直居中 */
+  justify-content: center;    /* 水平居中（可选，但一般也需要） */
+}
+
+/* 只控制 Threat Model 的图片大小 */
+.threat-item img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: block;
+}
+
+.threat-grid .fig-caption {
+  grid-column: 1 / -1;   /* 跨越所有列 */
+  text-align: center;    /* 文本居中 */
+  margin-top: 4px;
+}
+
+
+  @media (max-width: 900px) {
+    .threat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .system-figure {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .system-img {
+    max-width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .system-text {
+    margin-top: 16px;
+  }
+
+  .system-text p {
+    margin: 0 0 12px;
+    line-height: 1.6;
+  }
 </style>
 <body>
-  <h1>GhostRadar: Angular Exploitation of FMCW Radars</h1>
-  <p><span class="badge">Artifact Demo</span><span class="badge">Anonymized</span></p>
+  <h1>GHOSTRADAR:  A Framework for Angle-Domain Sensing Manipulation in
+Automotive FMCW Radars
+</h1>
+  <p>
+    <span class="badge">Submitted to IEEE S&P 2026</span>
+    <span class="badge">Anonymized</span>
+  </p>
 
   <div class="hero">
     <h2>Abstract</h2>
-    <p>We present <em>GhostRadar</em>...</p>
+    <p>
+      Frequency modulated continuous wave (FMCW) radars play a vital role for modern advanced driver assistance systems (ADAS) because of their robust sensing capabilities. However, they remain vulnerable to signal spoofing attacks. These attacks can cause vehicles to detect nonexistent objects, potentially triggering improper braking or evasive maneuvers. Although prior research has demonstrated radar spoofing attacks, existing approaches primarily focus on generating fake objects at a fixed distance directly in front of a vehicle, lacking angle manipulation. Therefore, the attack scenario is limited to frontal, fixed-range deception and cannot place targets at arbitrary azimuths.
+    </p>
+    <p>
+      In this work, we unleash the full potential of radar spoofing attacks by introducing GHOSTRADAR, a framework that crafts spoofing signals for a victim automotive radar to create controllable static fake objects at arbitrary angles and distances. We develop a ray-tracing-based mmWave radar simulator that accurately models environmental multipath reflections and use it to rigorously evaluate GHOSTRADAR. Large-scale simulations show that GHOSTRADAR achieves an average distance error of 0.45 meters and an average angular error of 2.67 degrees. Then, we run end-to-end attack evaluation in CARLA-based driving scenarios. The results show that 6 attack modes at 106 locations on three maps cause abnormal driving decisions in over 80% of trials. Finally, we build an attack prototype with commodity mmWave radars that validates GHOSTRADAR under real-world conditions. These results reveal precise, angle-aware spoofing capabilities and expose critical vulnerabilities in automotive radar systems.
+    </p>
   </div>
 
-  <h2>Video</h2>
-  <!-- videos -->
+  <section id="introduction" style="margin-top:20px;">
+    <h2>Introduction</h2>
+
+    <div class="intro-container">
+      <!-- Left: Figure -->
+      <div class="intro-left">
+        <img src="fig/fig1.png" alt="Overview of the GHOSTRADAR attack scenario" class="intro-img" style="width:320px;max-width:100%;">
+        <p class="fig-caption">Figure 1: Overview of the GHOSTRADAR attack scenario.</p>
+      </div>
+
+      <!-- Right: Text -->
+      <div class="intro-right">
+        <p>
+          Modern autonomous driving systems rely heavily on automotive FMCW radars due to their robustness
+          under adverse weather and illumination conditions. However, their physical-layer design makes
+          them vulnerable to spoofing, where an attacker injects carefully crafted signals to create false
+          objects in the radar’s range–angle domain. Existing spoofing techniques are limited to
+          fixed-distance, frontal deception and lack precise angle manipulation, restricting their impact
+          on realistic driving scenarios.
+        </p>
+        <p>
+          GHOSTRADAR overcomes these limitations by enabling controllable generation of static fake objects
+          at arbitrary angles and distances. As shown in Figure&nbsp;1, an attacker positioned roadside can
+          fabricate angle-consistent false obstacles that mislead the perception system and induce abnormal
+          motion planning outcomes. This capability is validated through ray-tracing simulation,
+          closed-loop CARLA evaluation, and real-world radar hardware.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section id="threat-model" style="margin-top:40px;">
+  <h2>Threat Model</h2>
+
+  <!-- 第一行：三个 PNG 一字排开 -->
+  <div class="threat-grid">
+    <div class="threat-item">
+      <img src="fig/fig2.png" alt="Threat model illustration 1">
+    </div>
+    <div class="threat-item">
+      <img src="fig/fig3.png" alt="Threat model illustration 2">
+    </div>
+    <div class="threat-item">
+      <img src="fig/fig4.png" alt="Threat model illustration 3">
+    </div>
+    <p class="fig-caption">Figure 2: Attack goal.</p>
+  </div>
+
+  <!-- Threat Model 文本介绍 -->
+  <p>
+    We consider an external wireless adversary located near the victim vehicle. The attacker is equipped
+    with a mmWave transmitter and directional antennas, and aims to inject coherent spoofing signals into
+    the victim FMCW radar such that static fake objects appear at attacker-chosen ranges and azimuth
+    angles in the radar’s range–angle map, while remaining fixed in the world coordinate frame as the
+    ego vehicle moves.
+  </p>
+  <p>
+    The adversary can passively observe radar emissions and probing signals to infer the victim’s radar
+    configuration, including carrier frequency, chirp slope, bandwidth, chirp duration, frame rate, and
+    antenna array layout. The attacker can synchronize its spoofing chirps to the victim with
+    microsecond-level timing accuracy and perform beamforming to focus energy on the target vehicle.
+    However, the attacker cannot compromise the in-vehicle software stack, cannot tamper with other
+    onboard sensors or actuators, and has no direct control over the planning and control modules beyond
+    what can be induced through manipulated radar measurements.
+  </p>
+  <p>
+    As shown in Figure.2, the attacker’s objective is to manipulate the victim vehicle’s high-level driving decisions by injecting carefully placed fake obstacles into its radar perception. By blocking the perceived free space in an adjacent lane, the adversary can suppress or disrupt overtaking maneuvers; by arranging spoofed objects along specific regions, the attacker can steer the vehicle toward a predetermined area; and by placing virtual obstacles along the turning path at intersections, the attacker can interfere with turning behavior, causing unnecessary braking, hesitation, or failure to complete the maneuver.
+  </p>
+</section>
+
+
+
+
+<section id="system-design" style="margin-top:40px;">
+  <h2>System Design</h2>
+
+  <!-- 上部：Figure 3 -->
+  <div class="system-figure">
+    <img src="fig/fig5.png" alt="System design of GHOSTRADAR" class="system-img">
+    <p class="fig-caption">
+      Figure 3: System design of GHOSTRADAR.
+    </p>
+  </div>
+
+  <!-- 下部：描述段落 -->
+  <div class="system-text">
+    <p>
+      GHOSTRADAR is designed as an end-to-end framework that bridges spoofing waveform generation,
+      ray-tracing–based radar simulation, and closed-loop autonomous driving evaluation. The system
+      takes attacker-specified fake object locations in the world coordinate frame as input, and
+      computes the desired range, angle, and Doppler signatures with respect to the moving ego vehicle.
+      These parameters are translated into per-chirp spoofing signals that align with the victim
+      FMCW radar’s timing and waveform configuration.
+    </p>
+    <p>
+      To faithfully model real-world propagation, a mmWave radar simulator based on specular
+      path tracing and material-aware scattering generates multi-path reflections and produces
+      FMCW-compatible ADC samples. The resulting radar point clouds, augmented with spoofed
+      echoes, are then injected into a CARLA-based autonomous driving stack for closed-loop testing.
+      This design enables systematic evaluation of angle-aware spoofing across diverse maps,
+      attack locations, and driving tasks under a unified pipeline.
+    </p>
+  </div>
+</section>
+
+
+
+
+
+
 
   <h2>Results</h2>
   <div class="grid">
-    <div><h3>Range–Angle Heatmap</h3><img src="figs/ra.png" alt="Range-Angle" style="width:100%;border-radius:12px"></div>
-    <div><h3>Closed-Loop Trajectory</h3><img src="figs/traj.png" alt="Trajectory" style="width:100%;border-radius:12px"></div>
+    <div>
+      <h3>Range–Angle Heatmap</h3>
+      <img src="figs/ra.png" alt="Range-Angle" style="width:100%;border-radius:12px">
+    </div>
+    <div>
+      <h3>Closed-Loop Trajectory</h3>
+      <img src="figs/traj.png" alt="Trajectory" style="width:100%;border-radius:12px">
+    </div>
   </div>
 
   <h2>Download</h2>
@@ -35,8 +278,8 @@
     <li><a href="bibtex.txt">BibTeX</a></li>
   </ul>
 
-  <div class="footer">This site contains no personal identifiers. Source code omissions are intentional for double-blind review.</div>
+  <div class="footer">
+    This site contains no personal identifiers. Source code omissions are intentional for double-blind review.
+  </div>
 </body>
 </html>
-
-
