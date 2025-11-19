@@ -478,6 +478,15 @@ Automotive FMCW Radars
     </div>
   </div>
 
+    <div class="results-text">
+    <p>
+      These measurements show that no strong target exists at the attack location under benign conditions,
+      whereas the spoofed target consistently appears at the intended range–angle bin during the attack,
+      confirming that GHOSTRADAR can inject a stable, angle-aware fake object into a real automotive radar.
+    </p>
+  </div>
+
+
 
 
 
@@ -486,6 +495,39 @@ Automotive FMCW Radars
 
 
 
+<section id="conclusion">
+  <h2>Conclusion</h2>
+  <ul>
+    <li>
+      <strong>GHOSTRADAR framework.</strong>
+      We introduce GHOSTRADAR, which couples a high-precision mmWave radar simulator with an attack mechanism that injects static fake objects at arbitrary ranges and angles into a victim FMCW radar.
+    </li>
+    <li>
+      <strong>Joint range–angle control and closed-loop evaluation.</strong>
+      Unlike prior work that only plants straight-ahead ghosts, GHOSTRADAR jointly and precisely controls fake objects’ distance and angle, and quantifies end-to-end impact via a frame-accurate CARLA-based closed-loop driving pipeline.
+    </li>
+    <li>
+      <strong>Simulator and beamforming design.</strong>
+      The ray-tracing simulator enables principled search over attack parameters, while phased-array beamforming focuses spoofed energy on the intended victim radar and suppresses bystander exposure.
+    </li>
+    <li>
+      <strong>High-precision range–angle manipulation in simulation.</strong>
+      Large-scale ray-tracing experiments yield a mean range attack error of 0.45&nbsp;m and a mean angular error of 2.67&deg;, showing that GHOSTRADAR can accurately position fake objects in the range–angle domain.
+    </li>
+    <li>
+      <strong>Open-loop control impact.</strong>
+      In open-loop experiments, GHOSTRADAR attains &le; 5% range and angle error in more than 75% of trials and triggers instantaneous abnormal control actions in approximately 85% of cases.
+    </li>
+    <li>
+      <strong>Closed-loop driving impact.</strong>
+      In closed-loop driving tasks, task-level attack success rates exceed 85% and remain stable across diverse weather conditions.
+    </li>
+    <li>
+      <strong>Real-world feasibility.</strong>
+      We further validate GHOSTRADAR on commodity mmWave radar development boards, demonstrating that the attack techniques transfer from simulation to real hardware and confirming their practical feasibility.
+    </li>
+  </ul>
+</section>
 
 
 
