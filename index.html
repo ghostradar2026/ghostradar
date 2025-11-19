@@ -172,13 +172,29 @@
   margin-top: 10px;
 }
 
+/* 统一改成白色背景，不再用黑底 */
 .results-grid-two-item img {
-  max-width: 100%;
+  width: 100%;
+  height: 260px;              /* 自行按效果微调 */
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   display: block;
   margin: 0 auto;
+  object-fit: contain;
+  background-color: #fff;     /* 白色背景 */
 }
+
+.results-grid-two-item video {
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  background-color: #fff;     /* 同样改成白色背景 */
+}
+
 
   .cl-matrix {
     display: grid;
@@ -198,11 +214,14 @@
   }
 
   .cl-cell video {
-    width: 100%;
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
-    display: block;
-  }
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: block;
+  background-color: #fff;  /* 这里改为白色背景 */
+  object-fit: contain;     /* 保持比例，空白区域也是白色 */
+}
+
 
   @media (max-width: 900px) {
     .cl-matrix {
@@ -214,17 +233,7 @@
   }
   
 
-  .results-grid-two-item img,
-.results-grid-two-item video {
-  width: 100%;
-  height: 260px;           /* 固定一个统一高度，自己可调 220/240/300 等 */
-  border-radius: 12px;
-  border: 1px solid #e5e7eb;
-  display: block;
-  margin: 0 auto;
-  object-fit: contain;     /* 关键：完整显示内容，不裁剪 */
-  background-color: #000;  /* 可选：为了视频/图片有统一的“画布”颜色 */
-}
+
 
 
 </style>
@@ -445,10 +454,34 @@ Automotive FMCW Radars
   <div class="results-text">
     <p>
       In our real-world experiments, we deploy a commodity automotive radar and a synchronized spoofing
-      transmitter in the configuration shown on the left, and record the resulting radar measurements and
-      vehicle behavior as illustrated in the video on the right.
+      transmitter in the configuration shown on the left, and record the experiment process in the video on the right.
     </p>
   </div>
+
+
+    <!-- 攻击前/攻击后实测结果，两张图一行排布 -->
+  <div class="results-grid-two" style="margin-top:20px;">
+    <!-- 左：攻击前 -->
+    <div class="results-grid-two-item">
+      <img src="fig/realexp1.png" alt="Real-world radar measurement before attack">
+      <p class="results-fig-caption">
+        Figure 8: Real-world radar measurement before attack.
+      </p>
+    </div>
+
+    <!-- 右：攻击后 -->
+    <div class="results-grid-two-item">
+      <img src="fig/realexp2.png" alt="Real-world radar measurement after attack">
+      <p class="results-fig-caption">
+        Figure 9: Real-world radar measurement after attacked.
+      </p>
+    </div>
+  </div>
+
+
+
+
+
 </div>
 
 
