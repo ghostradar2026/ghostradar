@@ -129,6 +129,104 @@
     margin: 0 0 12px;
     line-height: 1.6;
   }
+
+  .results-subsection {
+    margin-top: 28px;
+  }
+
+  .results-subsection h3 {
+    margin-bottom: 8px;
+  }
+
+  .results-figure {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .results-figure img {
+    max-width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .results-fig-caption {
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  .results-text {
+    margin-top: 12px;
+  }
+
+  .results-text p {
+    margin: 0 0 10px;
+    line-height: 1.6;
+  }
+  .results-grid-two {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.results-grid-two-item img {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: block;
+  margin: 0 auto;
+}
+
+  .cl-matrix {
+    display: grid;
+    grid-template-columns: 140px 1fr 1fr 1fr; /* 第一列是行名，后三列是 Mode 1/2/3 */
+    gap: 12px 16px;
+    align-items: center;
+    margin-top: 12px;
+  }
+
+  .cl-header {
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .cl-row-label {
+    font-weight: 500;
+  }
+
+  .cl-cell video {
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    .cl-matrix {
+      grid-template-columns: 110px 1fr; /* 小屏改为两列：左侧行名 + 右侧视频纵向堆叠 */
+    }
+    .cl-header {
+      text-align: left;
+    }
+  }
+  
+
+  .results-grid-two-item img,
+.results-grid-two-item video {
+  width: 100%;
+  height: 260px;           /* 固定一个统一高度，自己可调 220/240/300 等 */
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;     /* 关键：完整显示内容，不裁剪 */
+  background-color: #000;  /* 可选：为了视频/图片有统一的“画布”颜色 */
+}
+
+
 </style>
 <body>
   <h1>GHOSTRADAR:  A Framework for Angle-Domain Sensing Manipulation in
@@ -197,25 +295,8 @@ Automotive FMCW Radars
     <p class="fig-caption">Figure 2: Attack goal.</p>
   </div>
 
-  <!-- Threat Model 文本介绍 -->
   <p>
-    We consider an external wireless adversary located near the victim vehicle. The attacker is equipped
-    with a mmWave transmitter and directional antennas, and aims to inject coherent spoofing signals into
-    the victim FMCW radar such that static fake objects appear at attacker-chosen ranges and azimuth
-    angles in the radar’s range–angle map, while remaining fixed in the world coordinate frame as the
-    ego vehicle moves.
-  </p>
-  <p>
-    The adversary can passively observe radar emissions and probing signals to infer the victim’s radar
-    configuration, including carrier frequency, chirp slope, bandwidth, chirp duration, frame rate, and
-    antenna array layout. The attacker can synchronize its spoofing chirps to the victim with
-    microsecond-level timing accuracy and perform beamforming to focus energy on the target vehicle.
-    However, the attacker cannot compromise the in-vehicle software stack, cannot tamper with other
-    onboard sensors or actuators, and has no direct control over the planning and control modules beyond
-    what can be induced through manipulated radar measurements.
-  </p>
-  <p>
-    As shown in Figure.2, the attacker’s objective is to manipulate the victim vehicle’s high-level driving decisions by injecting carefully placed fake obstacles into its radar perception. By blocking the perceived free space in an adjacent lane, the adversary can suppress or disrupt overtaking maneuvers; by arranging spoofed objects along specific regions, the attacker can steer the vehicle toward a predetermined area; and by placing virtual obstacles along the turning path at intersections, the attacker can interfere with turning behavior, causing unnecessary braking, hesitation, or failure to complete the maneuver.
+    We consider an external wireless adversary equipped with a directional mmWave transmitter that can infer the victim FMCW radar’s configuration, synchronize spoofing chirps with microsecond accuracy, and beamform coherent signals to create static fake objects at attacker-chosen ranges and angles that remain fixed in the world frame as the ego vehicle moves. By strategically placing these virtual obstacles in the radar range–angle map (e.g., blocking adjacent lanes, steering the vehicle toward specific regions, or obstructing turning paths at intersections), the attacker can manipulate high-level driving decisions without compromising any in-vehicle software or other sensors.
   </p>
 </section>
 
@@ -236,50 +317,144 @@ Automotive FMCW Radars
   <!-- 下部：描述段落 -->
   <div class="system-text">
     <p>
-      GHOSTRADAR is designed as an end-to-end framework that bridges spoofing waveform generation,
-      ray-tracing–based radar simulation, and closed-loop autonomous driving evaluation. The system
-      takes attacker-specified fake object locations in the world coordinate frame as input, and
-      computes the desired range, angle, and Doppler signatures with respect to the moving ego vehicle.
-      These parameters are translated into per-chirp spoofing signals that align with the victim
-      FMCW radar’s timing and waveform configuration.
+      GHOSTRADAR is an end-to-end framework that takes attacker-specified fake object locations in the world frame, computes their range, angle, and Doppler signatures relative to the moving ego vehicle, and converts them into per-chirp spoofing signals aligned with the victim FMCW radar’s configuration. A ray-tracing mmWave radar simulator generates realistic multi-path reflections and FMCW ADC samples, which are combined with spoofed echoes and injected into a CARLA-based autonomous driving stack to systematically evaluate angle-aware spoofing across diverse maps, attack locations, and driving tasks. 
     </p>
-    <p>
-      To faithfully model real-world propagation, a mmWave radar simulator based on specular
-      path tracing and material-aware scattering generates multi-path reflections and produces
-      FMCW-compatible ADC samples. The resulting radar point clouds, augmented with spoofed
-      echoes, are then injected into a CARLA-based autonomous driving stack for closed-loop testing.
-      This design enables systematic evaluation of angle-aware spoofing across diverse maps,
-      attack locations, and driving tasks under a unified pipeline.
-    </p>
+
   </div>
 </section>
 
 
+<section id="evaluation-setup" style="margin-top:40px;">
+  <h2>Evaluation Setup</h2>
+  <p>
+  We evaluate GHOSTRADAR in three setups: an <b>open-loop</b> radar simulation with CARLA replays to verify that spoofed signals create fake objects at the intended ranges and angles, a <b>closed-loop</b> CARLA-based autonomous driving stack to study how angle-aware spoofing affects perception, planning, and control, and a <b>real-world</b> deployment with commodity automotive radars and a synchronized spoofing transmitter.
+</p>
+<p>
+  In open loop, we measure range and azimuth errors and the detection rate of spoofed peaks; in closed loop, we compare baseline and attacked trajectories and quantify task failures and abnormal behaviors; in real-world tests, we check whether the spoofed target consistently appears at the intended range–angle bin and remains clearly distinguishable from clutter.
+</p>
+
+</section>
 
 
+<section id="results" style="margin-top:40px;">
+  <h2>Experimental Results</h2>
 
+  <!-- ================= Open-Loop Results ================= -->
+  <div class="results-subsection" id="results-open-loop">
+  <h3>Open-Loop Results</h3>
 
-
-  <h2>Results</h2>
-  <div class="grid">
-    <div>
-      <h3>Range–Angle Heatmap</h3>
-      <img src="figs/ra.png" alt="Range-Angle" style="width:100%;border-radius:12px">
+  <!-- 第一部分：左 fig7，右 fig8 -->
+  <div class="results-grid-two">
+    <div class="results-grid-two-item">
+      <img src="fig/fig6.png" alt="Open-loop ray-tracing based radar simulation results">
+      <p class="results-fig-caption">
+        Figure 4: Open-loop ray-tracing based radar simulation.
+      </p>
     </div>
-    <div>
-      <h3>Closed-Loop Trajectory</h3>
-      <img src="figs/traj.png" alt="Trajectory" style="width:100%;border-radius:12px">
+    <div class="results-grid-two-item">
+      <img src="fig/fig7.png" alt="Open-loop CARLA replay based evaluation results">
+      <p class="results-fig-caption">
+        Figure 5: Open-loop CARLA-based evaluation.
+      </p>
     </div>
   </div>
 
-  <h2>Download</h2>
-  <ul>
-    <li><a href="artifact.zip">artifact.zip</a> (scripts, instructions, sample data)</li>
-    <li><a href="bibtex.txt">BibTeX</a></li>
-  </ul>
+  <!-- Open-loop 的文字说明，后面我们再具体填 -->
+  <div class="results-text">
+    <p>
+  
+  In the open-loop setting, GHOSTRADAR is evaluated independently of any driving policy to verify that spoofed signals create physically plausible and accurately positioned fake objects. As shown in Figures&nbsp;4 and&nbsp;5, the ray-tracing radar simulator and CARLA radar pipeline both reconstruct clear static peaks at the commanded ranges and angles, with sub-meter range error and only a few degrees of angular deviation.
+<p>
+  These results demonstrate that GHOSTRADAR reliably generates stable, angle-aware fake objects that survive the full sensing pipeline and appear indistinguishable from legitimate radar returns at the perception layer.
+</p>
 
-  <div class="footer">
-    This site contains no personal identifiers. Source code omissions are intentional for double-blind review.
+    </p>
+    </p>
   </div>
+</div>
+
+
+  <!-- ================= Closed-Loop Results ================= -->
+  <div class="results-subsection" id="results-closed-loop">
+  <h3>Closed-Loop Results</h3>
+
+  <div class="results-text">
+    <p>
+      We present six closed-loop driving scenarios comparing <b>benign</b> and <b>attacked</b> runs under three attack modes.
+      Each cell below shows the ego vehicle’s behavior in CARLA when radar measurements are either clean or
+      manipulated by GHOSTRADAR.
+    </p>
+  </div>
+
+  <div class="cl-matrix">
+    <!-- 第一行：列标题（空白 + Mode 1/2/3） -->
+    <div></div>
+    <div class="cl-header">Mode 1</div>
+    <div class="cl-header">Mode 2</div>
+    <div class="cl-header">Mode 3</div>
+
+    <!-- 第二行：Benign row -->
+    <div class="cl-row-label">Benign scenario</div>
+    <div class="cl-cell">
+      <video src="fig/1-1.mp4" controls muted loop></video>
+    </div>
+    <div class="cl-cell">
+      <video src="fig/2-1.mp4" controls muted loop></video>
+    </div>
+    <div class="cl-cell">
+      <video src="fig/3-1.mp4" controls muted loop></video>
+    </div>
+
+    <!-- 第三行：Attacked row -->
+    <div class="cl-row-label">Attacked scenario</div>
+    <div class="cl-cell">
+      <video src="fig/1-2.mp4" controls muted loop></video>
+    </div>
+    <div class="cl-cell">
+      <video src="fig/2-2.mp4" controls muted loop></video>
+    </div>
+    <div class="cl-cell">
+      <video src="fig/3-2.mp4" controls muted loop></video>
+    </div>
+  </div>
+</div>
+
+
+  <!-- ================= Real-World Results ================= -->
+  <div class="results-subsection" id="results-realworld">
+  <h3>Real-World Results</h3>
+
+  <div class="results-grid-two">
+    <!-- 左侧：实验 setup 图片 -->
+    <div class="results-grid-two-item">
+      <img src="fig/real-setup.png" alt="Real-world experimental setup">
+      <p class="results-fig-caption">
+        Figure 6: Real-world spoofing experiment setup.
+      </p>
+    </div>
+
+    <!-- 右侧：实验过程视频 -->
+    <div class="results-grid-two-item">
+      <video src="fig/real-exp.mp4" controls muted loop></video>
+      <p class="results-fig-caption">
+        Figure 7: Real-world spoofing demonstration.
+      </p>
+    </div>
+  </div>
+
+  <div class="results-text">
+    <p>
+      In our real-world experiments, we deploy a commodity automotive radar and a synchronized spoofing
+      transmitter in the configuration shown on the left, and record the resulting radar measurements and
+      vehicle behavior as illustrated in the video on the right.
+    </p>
+  </div>
+</div>
+
+
+
+
+
+
 </body>
 </html>
