@@ -49,18 +49,18 @@
   .intro-left {
     flex: 0 0 42%;
     max-width: 42%;
-    display: flex;              /* 新增 */
-    flex-direction: column;     /* 新增：图片+caption 竖着排 */
-    align-items: center;        /* 新增：水平居中 */
+    display: flex;              
+    flex-direction: column;    
+    align-items: center;       
   }
   .intro-right {
     flex: 1;
   }
   .intro-img {
-    width: 100%;                /* 或根据需要改成 80% 等 */
+    width: 100%;               
     border-radius: 12px;
     border: 1px solid #e5e7eb;
-    display: block;             /* 可选，加上更稳妥 */
+    display: block;           
   }
   .fig-caption {
     font-size: 14px;
@@ -79,15 +79,13 @@
   margin-bottom: 12px;
 }
 
-/* 每个格子是一个固定高度的盒子，用 flex 居中内容 */
 .threat-item {
-  height: 230px;              /* 根据实际效果调，比如 200 / 240 */
+  height: 230px;              
   display: flex;
-  align-items: center;        /* 垂直居中 */
-  justify-content: center;    /* 水平居中（可选，但一般也需要） */
+  align-items: center;       
+  justify-content: center;   
 }
 
-/* 只控制 Threat Model 的图片大小 */
 .threat-item img {
   max-width: 100%;
   max-height: 100%;
@@ -97,8 +95,8 @@
 }
 
 .threat-grid .fig-caption {
-  grid-column: 1 / -1;   /* 跨越所有列 */
-  text-align: center;    /* 文本居中 */
+  grid-column: 1 / -1;   
+  text-align: center;    
   margin-top: 4px;
 }
 
@@ -172,16 +170,15 @@
   margin-top: 10px;
 }
 
-/* 统一改成白色背景，不再用黑底 */
 .results-grid-two-item img {
   width: 100%;
-  height: 260px;              /* 自行按效果微调 */
+  height: 260px;              
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   display: block;
   margin: 0 auto;
   object-fit: contain;
-  background-color: #fff;     /* 白色背景 */
+  background-color: #fff;     
 }
 
 .results-grid-two-item video {
@@ -192,13 +189,13 @@
   display: block;
   margin: 0 auto;
   object-fit: contain;
-  background-color: #fff;     /* 同样改成白色背景 */
+  background-color: #fff;    
 }
 
 
   .cl-matrix {
     display: grid;
-    grid-template-columns: 140px 1fr 1fr 1fr; /* 第一列是行名，后三列是 Mode 1/2/3 */
+    grid-template-columns: 140px 1fr 1fr 1fr; 
     gap: 12px 16px;
     align-items: center;
     margin-top: 12px;
@@ -218,14 +215,14 @@
   border-radius: 12px;
   border: 1px solid #e5e7eb;
   display: block;
-  background-color: #fff;  /* 这里改为白色背景 */
-  object-fit: contain;     /* 保持比例，空白区域也是白色 */
+  background-color: #fff;  
+  object-fit: contain;     
 }
 
 
   @media (max-width: 900px) {
     .cl-matrix {
-      grid-template-columns: 110px 1fr; /* 小屏改为两列：左侧行名 + 右侧视频纵向堆叠 */
+      grid-template-columns: 110px 1fr; 
     }
     .cl-header {
       text-align: left;
@@ -290,7 +287,6 @@ Automotive FMCW Radars
   <section id="threat-model" style="margin-top:40px;">
   <h2>Threat Model</h2>
 
-  <!-- 第一行：三个 PNG 一字排开 -->
   <div class="threat-grid">
     <div class="threat-item">
       <img src="fig/fig2.png" alt="Threat model illustration 1">
@@ -315,7 +311,6 @@ Automotive FMCW Radars
 <section id="system-design" style="margin-top:40px;">
   <h2>System Design</h2>
 
-  <!-- 上部：Figure 3 -->
   <div class="system-figure">
     <img src="fig/fig5.png" alt="System design of GHOSTRADAR" class="system-img">
     <p class="fig-caption">
@@ -323,7 +318,6 @@ Automotive FMCW Radars
     </p>
   </div>
 
-  <!-- 下部：描述段落 -->
   <div class="system-text">
     <p>
       GHOSTRADAR is an end-to-end framework that takes attacker-specified fake object locations in the world frame, computes their range, angle, and Doppler signatures relative to the moving ego vehicle, and converts them into per-chirp spoofing signals aligned with the victim FMCW radar’s configuration. A ray-tracing mmWave radar simulator generates realistic multi-path reflections and FMCW ADC samples, which are combined with spoofed echoes and injected into a CARLA-based autonomous driving stack to systematically evaluate angle-aware spoofing across diverse maps, attack locations, and driving tasks. 
@@ -352,7 +346,6 @@ Automotive FMCW Radars
   <div class="results-subsection" id="results-open-loop">
   <h3>Open-Loop Results</h3>
 
-  <!-- 第一部分：左 fig7，右 fig8 -->
   <div class="results-grid-two">
     <div class="results-grid-two-item">
       <img src="fig/fig6.png" alt="Open-loop ray-tracing based radar simulation results">
@@ -368,7 +361,6 @@ Automotive FMCW Radars
     </div>
   </div>
 
-  <!-- Open-loop 的文字说明，后面我们再具体填 -->
   <div class="results-text">
     <p>
   
@@ -396,13 +388,11 @@ Automotive FMCW Radars
   </div>
 
   <div class="cl-matrix">
-    <!-- 第一行：列标题（空白 + Mode 1/2/3） -->
     <div></div>
     <div class="cl-header">Mode 1</div>
     <div class="cl-header">Mode 2</div>
     <div class="cl-header">Mode 3</div>
 
-    <!-- 第二行：Benign row -->
     <div class="cl-row-label">Benign scenario</div>
     <div class="cl-cell">
       <video src="fig/1-1.mp4" controls muted loop></video>
@@ -414,7 +404,6 @@ Automotive FMCW Radars
       <video src="fig/3-1.mp4" controls muted loop></video>
     </div>
 
-    <!-- 第三行：Attacked row -->
     <div class="cl-row-label">Attacked scenario</div>
     <div class="cl-cell">
       <video src="fig/1-2.mp4" controls muted loop></video>
@@ -434,7 +423,6 @@ Automotive FMCW Radars
   <h3>Real-World Results</h3>
 
   <div class="results-grid-two">
-    <!-- 左侧：实验 setup 图片 -->
     <div class="results-grid-two-item">
       <img src="fig/real-setup.png" alt="Real-world experimental setup">
       <p class="results-fig-caption">
@@ -442,9 +430,8 @@ Automotive FMCW Radars
       </p>
     </div>
 
-    <!-- 右侧：实验过程视频 -->
     <div class="results-grid-two-item">
-      <video src="fig/real-exp.mp4" controls muted loop></video>
+      <video src="fig/real_world_exp.mp4" controls muted loop></video>
       <p class="results-fig-caption">
         Figure 7: Real-world spoofing demonstration.
       </p>
@@ -459,9 +446,7 @@ Automotive FMCW Radars
   </div>
 
 
-    <!-- 攻击前/攻击后实测结果，两张图一行排布 -->
   <div class="results-grid-two" style="margin-top:20px;">
-    <!-- 左：攻击前 -->
     <div class="results-grid-two-item">
       <img src="fig/realexp1.png" alt="Real-world radar measurement before attack">
       <p class="results-fig-caption">
@@ -469,7 +454,6 @@ Automotive FMCW Radars
       </p>
     </div>
 
-    <!-- 右：攻击后 -->
     <div class="results-grid-two-item">
       <img src="fig/realexp2.png" alt="Real-world radar measurement after attack">
       <p class="results-fig-caption">
@@ -533,3 +517,4 @@ Automotive FMCW Radars
 
 </body>
 </html>
+
