@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="GhostRadar: Spatial-Signature Forgery for Angle-Decoupled Automotive Radar Spoofing." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="GhostRadar" />
+    <meta property="og:description" content="Spatial-Signature Forgery for Angle-Decoupled Automotive Radar Spoofing" />
+    <meta property="og:image" content="assets/images/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <title>GhostRadar: Spatial-Signature Forgery for Angle-Decoupled Automotive Radar Spoofing</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <article>
+        <header class="paper-header">
+          <h1>GhostRadar: Spatial-Signature Forgery for Angle-Decoupled Automotive Radar Spoofing</h1>
+          <p class="author">Anonymous Author</p>
+        </header>
+
+        <section>
+          <h2>Abstract</h2>
+          <p>
+            Automotive radar is widely used in advanced driver-assistance systems (ADAS), yet its
+            open wireless interface makes it vulnerable to spoofing. Prior attacks can manipulate
+            phantom range and velocity, but the perceived bearing remains constrained by the
+            physical direction of the attack transmitter. We present GhostRadar, an over-the-air
+            attack framework that decouples phantom bearing from attacker location. Multiple
+            coordinated radar nodes synthesize the victim radar's virtual-array response at a
+            desired bearing. We characterize how attack-node geometry and channel conditions
+            constrain the controllable angular region, optimize radar parameters under channel
+            variation, and map the resulting configurations to hardware-supported amplitude and
+            phase settings.
+          </p>
+          <p>
+            Physical experiments on 77-GHz radar channels validate GhostRadar's ability to decouple
+            spoofed bearing from attacker location. With four attack nodes confined to a 40°
+            physical sector, GhostRadar achieves 132° of out-of-sector angular control, including a
+            contiguous 33° interval. Across independent channel realizations, 96.8% of phantoms are
+            localized within 1° of the requested bearing, with a 0.609° mean absolute error. Across
+            1,908 closed-loop driving episodes, GhostRadar causes 80.71% of lane-change and
+            overtaking maneuvers to abort, compared with 8.44% under traditional forward-only radar
+            spoofing.
+          </p>
+        </section>
+
+        <section>
+          <h2>1. Introduction</h2>
+          <div class="text-figure">
+            <div>
+              <p>
+                Modern vehicles rely on frequency-modulated continuous-wave radar to estimate range,
+                velocity, and angle in adverse weather and lighting. Existing spoofing attacks mainly
+                manipulate range and velocity, while the perceived bearing remains coupled to the
+                attack transmitter's physical direction. This limits where a phantom can appear and,
+                consequently, how it influences planning.
+              </p>
+            </div>
+            <figure>
+              <img src="assets/images/safety-motivation.png" alt="A spoofed target is moved from a non-critical location into the vehicle's planned path." />
+              <figcaption>Figure 1. Bearing control moves a spoofed target into the planned path.</figcaption>
+            </figure>
+          </div>
+          <div class="text-figure">
+            <div>
+              <p>
+                GhostRadar introduces angle decoupling: the phantom target's reported bearing can differ
+                from the physical bearing of every attack transmitter. Within the controllable angular
+                region, the victim radar estimates the bearing from a forged spatial signature rather
+                than from the location of a single attacker.
+              </p>
+            </div>
+            <figure>
+              <img src="assets/images/angle-decoupling.png" alt="Four coordinated attack nodes synthesize a phantom at a different bearing." />
+              <figcaption>Figure 2. Coordinated nodes synthesize a phantom at a different bearing.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section>
+          <h2>2. Threat Model</h2>
+          <p>
+            The attacker passively profiles the victim radar, recovers its waveform and TDM-MIMO
+            transmit order, and estimates the channels from the attack nodes to the victim. The
+            attacker then selects a desired phantom range, radial velocity, bearing, amplitude, and
+            phase. The attack is evaluated only in controlled laboratory settings, simulation, and
+            datasets.
+          </p>
+        </section>
+
+        <section>
+          <h2>3. GhostRadar Design</h2>
+          <div class="text-figure text-figure-wide">
+            <div>
+              <p>
+                GhostRadar computes slot-dependent complex weights for multiple synchronized attack
+                nodes. The combined signal reproduces the victim radar's virtual-array steering response
+                for a target at the requested bearing. In simplified form, the attack solves
+              </p>
+              <p class="equation">H Q = α a<sub>f</sub>,</p>
+              <p>
+                where H is the attack channel matrix, Q contains the node-slot weights, and
+                a<sub>f</sub> is the desired array response. Robust optimization and hardware mapping
+                preserve this response under channel variation and finite RF settings.
+              </p>
+            </div>
+            <figure>
+              <img src="assets/images/system-overview.png" alt="GhostRadar system overview from profiling to joint range, Doppler, and angle attack." />
+              <figcaption>Figure 3. End-to-end GhostRadar design.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section>
+          <h2>4. Experimental Methodology</h2>
+          <p>
+            The evaluation uses a 3-transmitter, 4-receiver TDM-MIMO victim radar and its complete
+            processing chain. Signal-level experiments measure controllability, robustness, CFAR
+            detection, range error, velocity error, and bearing error. Real 77-GHz propagation
+            channels are measured in an indoor laboratory and an outdoor parking lot. Closed-loop
+            CARLA experiments integrate radar and camera perception with autonomous planning.
+          </p>
+        </section>
+
+        <section>
+          <h2>5. Evaluation</h2>
+          <h3>5.1 Angular Controllability</h3>
+          <div class="text-figure">
+            <div>
+              <p>
+                With four attack nodes spanning a 40° physical sector, GhostRadar provides 132° of total
+                controllable bearing outside that sector. The largest continuous out-of-sector interval
+                is 33°. More nodes and a wider deployment span improve channel conditioning and increase
+                the controllable region.
+              </p>
+            </div>
+            <figure>
+              <img src="assets/images/controllability.png" alt="Heatmap of controllable width for different node counts and deployment spans." />
+              <figcaption>Figure 4. Out-of-sector controllable width.</figcaption>
+            </figure>
+          </div>
+
+          <h3>5.2 Robustness and Radar-Processing Accuracy</h3>
+          <p>
+            Robust mapped weights achieve 96.8% success on independent test channels, with 0.609°
+            mean absolute bearing error. After the complete victim processing chain, approximately
+            93.3% of trials produce a matched CFAR detection, joint range-Doppler-angle success is
+            approximately 77%, and bearing error remains approximately 0.9°.
+          </p>
+          <div class="figure-row">
+            <figure>
+              <img src="assets/images/range-angle-before.png" alt="Range-angle map before the attack." />
+              <figcaption>Figure 5(a). Range-angle map before spatial-signature forgery.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/images/range-angle-under-attack.png" alt="Range-angle map with the forged phantom at the requested bearing." />
+              <figcaption>Figure 5(b). Under attack, the phantom appears at the requested bearing after the complete processing chain.</figcaption>
+            </figure>
+          </div>
+
+          <h3>5.3 Measured 77-GHz Channels</h3>
+          <div class="text-figure text-figure-wide">
+            <div>
+              <p>
+                Indoor and outdoor measurements confirm that practical wireless environments provide
+                enough independent spatial responses for substantial out-of-sector bearing control.
+                Across the tested range intervals, a requested bearing up to 40° is produced with
+                approximately 2° error in both environments.
+              </p>
+            </div>
+            <div class="mini-figure-row">
+              <figure>
+                <img src="assets/images/indoor-setup.png" alt="Indoor 77-GHz channel measurement setup." />
+                <figcaption>Figure 6(a). Indoor setup.</figcaption>
+              </figure>
+              <figure>
+                <img src="assets/images/outdoor-setup.png" alt="Outdoor 77-GHz channel measurement setup." />
+                <figcaption>Figure 6(b). Outdoor setup.</figcaption>
+              </figure>
+            </div>
+          </div>
+
+          <h3>5.4 Real-World Demonstration</h3>
+          <video controls preload="metadata" playsinline>
+            <source src="assets/videos/real-world-demo.mp4" type="video/mp4" />
+            Your browser does not support HTML video.
+          </video>
+          <p class="caption">Video 1. Real-world parking-lot experiment demonstration.</p>
+
+          <h3>5.5 Multimodal Driving Impact</h3>
+          <p>
+            Across 1,908 GhostRadar episodes, 80.71% of lane-change and overtaking maneuvers are
+            aborted. Under the forward-only baseline, the abort rate is 8.44%. Among detected
+            GhostRadar phantoms, 85.86–97.71% change the planned path. The result remains consistent
+            across day, night, and rain.
+          </p>
+          <div class="figure-row">
+            <figure>
+              <img src="assets/images/trajectory-right.png" alt="Right lane-change trajectories with no attack, a forward-only attack, and GhostRadar." />
+              <figcaption>Figure 7(a). At the right lane-change location, the GhostRadar phantom is placed in the target lane and causes the vehicle to stop.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/images/trajectory-left.png" alt="Left lane-change trajectories with no attack, a forward-only attack, and GhostRadar." />
+              <figcaption>Figure 7(b). At the left lane-change location, bearing control blocks the commanded maneuver.</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section>
+          <h2>6. CARLA Failure Cases</h2>
+          <p>The following videos show representative autonomous-driving failures at four CARLA locations under heavy rain and nighttime sensing conditions.</p>
+
+          <h3>Location 1</h3>
+          <div class="media-row">
+            <div><h4>Heavy rain</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-1-heavy-rain.mp4" type="video/mp4" /></video></div>
+            <div><h4>Night</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-1-night.mp4" type="video/mp4" /></video></div>
+          </div>
+
+          <h3>Location 2</h3>
+          <div class="media-row">
+            <div><h4>Heavy rain</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-2-heavy-rain.mp4" type="video/mp4" /></video></div>
+            <div><h4>Night</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-2-night.mp4" type="video/mp4" /></video></div>
+          </div>
+
+          <h3>Location 3</h3>
+          <div class="media-row">
+            <div><h4>Heavy rain</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-3-heavy-rain.mp4" type="video/mp4" /></video></div>
+            <div><h4>Night</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-3-night.mp4" type="video/mp4" /></video></div>
+          </div>
+
+          <h3>Location 4</h3>
+          <div class="media-row">
+            <div><h4>Heavy rain</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-4-heavy-rain.mp4" type="video/mp4" /></video></div>
+            <div><h4>Night</h4><video controls preload="metadata" playsinline><source src="assets/videos/location-4-night.mp4" type="video/mp4" /></video></div>
+          </div>
+        </section>
+
+        <section>
+          <h2>7. Discussion</h2>
+          <h3>Potential Defenses</h3>
+          <p>
+            Possible defenses include examining the spatial distribution of radar returns, checking
+            whether range, velocity, bearing, and radar response evolve consistently across time,
+            and comparing radar observations with other sensing modalities.
+          </p>
+          <h3>Limitations</h3>
+          <p>
+            The hardware measurements use real 77-GHz propagation channels but do not include
+            simultaneous transmission from multiple synchronized attack nodes. The measurements
+            also use fixed attacker and victim locations. Future work will evaluate a synchronized
+            multi-node RF platform and study mobility, faster channel estimation, synchronization
+            error, and update delay.
+          </p>
+        </section>
+
+        <section>
+          <h2>8. Conclusion</h2>
+          <p>
+            GhostRadar decouples a phantom's reported bearing from the physical directions of the
+            attack nodes by reproducing the victim-side virtual-array response for a requested
+            bearing. The results show that bearing control substantially expands the capability and
+            downstream safety impact of automotive radar spoofing.
+          </p>
+        </section>
+
+        <section>
+          <h2>Ethical Considerations</h2>
+          <p>
+            All experiments were conducted in controlled laboratory settings or using simulation
+            and datasets, without road tests, interactions with real vehicles in the wild, or
+            exposure to uninvolved third parties. The study involves no human subjects and collects
+            no personal or sensitive data. The work reports the details necessary for scientific
+            evaluation and the development of defenses.
+          </p>
+        </section>
+
+      </article>
+    </main>
+  </body>
+</html>
